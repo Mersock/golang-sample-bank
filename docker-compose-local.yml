@@ -1,6 +1,7 @@
 services:
   db:
     image: postgres:14.3
+    container_name: golang-simple-bank-db
     ports:
       - 5433:5432
     environment:
