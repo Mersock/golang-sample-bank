@@ -19,8 +19,8 @@ type TransferTxParams struct {
 
 type TransferTxResult struct {
 	Transfer      Transfer `json:"transfer"`
-	FromAccountID int64    `json:"from_account"`
-	ToAccountID   int64    `json:"to_account"`
+	FromAccountID Account  `json:"from_account"`
+	ToAccountID   Account  `json:"to_account"`
 	FromEntry     Entry    `json:"from_entrty"`
 	ToEntry       Entry    `json:"to_entrty"`
 }
@@ -88,7 +88,25 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 			return err
 		}
 
-		//TODO: update accounts balance
+		//get account to update accounts balance
+
+		result.FromAccountID, err = q.AddAccountBalance(ctx, AddAccountBalanceParams{
+			ID:     arg.FromAccountID,
+			Amount: -arg.Amount,
+		})
+
+		if err != nil {
+			return err
+		}
+
+		result.ToAccountID, err = q.AddAccountBalance(ctx, AddAccountBalanceParams{
+			ID:     arg.ToAccountID,
+			Amount: arg.Amount,
+		})
+
+		if err != nil {
+			return err
+		}
 
 		return nil
 	})
