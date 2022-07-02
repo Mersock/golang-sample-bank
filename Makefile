@@ -25,4 +25,8 @@ test:
 server:
 	go run main.go
 
-.PHONY: dbup createdb dropdb migrateup migratedown migratedrop sqlc test server
+mock:
+	mockgen -build_flags=--mod=mod -package mockdb -destination db/mock/store.go github.com/Mersock/golang-sample-bank/db/sqlc Store
+
+.PHONY: dbup createdb dropdb migrateup migratedown migratedrop sqlc test server mockteststore
+
