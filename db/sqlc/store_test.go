@@ -12,7 +12,6 @@ func TestTransferTx(t *testing.T) {
 
 	acc1 := createRandomAccount(t)
 	acc2 := createRandomAccount(t)
-	t.Log(">> before:", acc1.Balance, acc2.Balance)
 
 	//test concurrent tranfer
 	n := 5
@@ -88,7 +87,6 @@ func TestTransferTx(t *testing.T) {
 		require.Equal(t, acc2.ID, toAccount.ID)
 
 		//check account balance
-		t.Log(">> tx:", fromAcount.Balance, toAccount.Balance)
 		diff1 := acc1.Balance - fromAcount.Balance
 		diff2 := toAccount.Balance - acc2.Balance
 		require.Equal(t, diff1, diff2)
@@ -100,7 +98,6 @@ func TestTransferTx(t *testing.T) {
 		require.True(t, k >= 1 && k <= n)
 		require.NotContains(t, existed, k)
 		existed[k] = true
-		t.Log("exited", existed)
 	}
 
 	// check the final updated balance
@@ -110,7 +107,6 @@ func TestTransferTx(t *testing.T) {
 	updateAccount2, err := testQueries.GetAccount(context.Background(), acc2.ID)
 	require.NoError(t, err)
 
-	t.Log(">> after:", updateAccount1.Balance, updateAccount2.Balance)
 	require.Equal(t, acc1.Balance-int64(n)*amount, updateAccount1.Balance)
 	require.Equal(t, acc2.Balance+int64(n)*amount, updateAccount2.Balance)
 }
@@ -120,7 +116,6 @@ func TestTransferDeadlock(t *testing.T) {
 
 	acc1 := createRandomAccount(t)
 	acc2 := createRandomAccount(t)
-	t.Log(">> before:", acc1.Balance, acc2.Balance)
 
 	//test concurrent tranfer
 	n := 10
@@ -162,7 +157,6 @@ func TestTransferDeadlock(t *testing.T) {
 	updateAccount2, err := testQueries.GetAccount(context.Background(), acc2.ID)
 	require.NoError(t, err)
 
-	t.Log(">> after:", updateAccount1.Balance, updateAccount2.Balance)
 	require.Equal(t, acc1.Balance, updateAccount1.Balance)
 	require.Equal(t, acc2.Balance, updateAccount2.Balance)
 }
