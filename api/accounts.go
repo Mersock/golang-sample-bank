@@ -6,6 +6,7 @@ import (
 
 	db "github.com/Mersock/golang-sample-bank/db/sqlc"
 	"github.com/gin-gonic/gin"
+	"github.com/lib/pq"
 )
 
 type createAccountReq struct {
@@ -38,7 +39,14 @@ func (server *Server) createAccount(ctx *gin.Context) {
 	account, err := server.store.CreateAccount(ctx, arg)
 
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, errRes(err))
+		if pqErr, ok := err.(*pq.Error); ok {
+			switch pqErr.Code.Name() {
+			case "unique_violation", "foreign_key_violation":
+				ctx.JSON(http.StatusForbidden, errRes(err))
+				return
+			}
+		}
+		ctx.JSON(http.StatusInternalServerError, errRes(err))
 		return
 	}
 
