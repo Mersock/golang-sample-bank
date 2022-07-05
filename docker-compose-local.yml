@@ -1,5 +1,5 @@
 services:
-  db:
+  postgres:
     image: postgres:14.3
     container_name: golang-simple-bank-db
     ports:
@@ -7,3 +7,18 @@ services:
     environment:
       POSTGRES_PASSWORD: P@ssword
       POSTGRES_USER: root
+      POSTGRES_DB: simple_bank
+
+  api:
+    build:
+      context: .    
+      dockerfile: Dockerfile
+    container_name: golang-simple-bank-api
+    ports:
+      - "8080:8080"
+    environment:
+      DB_SOURCE: postgresql://root:P@ssword@postgres:5432/simple_bank?sslmode=disable
+    depends_on:
+      - postgres
+    entrypoint: ["/app/wait-for.sh","postgres:5432","--","/app/start.sh"]
+    command: ["/app/main"]  

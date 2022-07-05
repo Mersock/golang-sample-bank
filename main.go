@@ -13,7 +13,7 @@ import (
 func main() {
 	config, err := util.LoadConfig(".")
 	if err != nil {
-		log.Fatal("connat load config ", err)
+		log.Fatal("cannot load config ", err)
 	}
 
 	conn, err := sql.Open(config.DBDriver, config.DBSource)
