@@ -20,7 +20,9 @@ COPY db/migration ./migration
 COPY app.env .
 #start sh
 COPY start.sh .
+
 #copy wait for to synchronize docker container running
+#ref https://github.com/mrako/wait-for
 COPY wait-for.sh .
 
 EXPOSE 8080
