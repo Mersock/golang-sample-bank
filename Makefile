@@ -34,5 +34,20 @@ server:
 mock:
 	mockgen -build_flags=--mod=mod -package mockdb -destination db/mock/store.go github.com/Mersock/golang-sample-bank/db/sqlc Store
 
-.PHONY: dbup createdb dropdb migrateup migratedown migratedrop sqlc test server mockteststore migrateup1 migratedown1
+kubedbup:
+	kubectl apply -f k8s/db
+
+kubedbdown:	
+	kubectl delete -f k8s/db
+
+kubeapiup:
+	kubectl apply -f k8s/api  	 
+
+kubeapidown:
+	kubectl delete -f k8s/api
+
+minikubeup:
+	minikube tunnel
+
+.PHONY: dbup createdb dropdb migrateup migrateup1 migratedown migratedown1 migratedrop sqlc test server mock kubedbup kubedbdown kubeapiup minikubeup
 
