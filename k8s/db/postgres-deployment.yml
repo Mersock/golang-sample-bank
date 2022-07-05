@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: golang-simple-bank-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: golang-simple-bank-db
+  template:
+    metadata:
+      labels:
+        app: golang-simple-bank-db
+    spec:
+      #config volume
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: db-persistent-volume-claim    
+      containers:
+      - name: golang-simple-bank-db
+        image: postgres:14.3
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 5432
+        #volume mount
+        volumeMounts:
+          - name: postgres-storage
+            mountPath: /var/lib/postgresql/data
+            subPath: postgres        
+        env:
+          - name: POSTGRES_PASSWORD
+            value:  P@ssword
+          - name: POSTGRES_USER
+            value: root
+          - name: POSTGRES_DB
+            value: simple_bank    

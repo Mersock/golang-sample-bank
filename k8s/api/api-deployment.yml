@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: golang-sample-bank-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: golang-sample-bank-api
+  template:
+    metadata:
+      labels:
+        app: golang-sample-bank-api
+    spec:
+      containers:
+      - name: golang-sample-bank-api
+        image: mersock/samplebank:0.0.3
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080
+        env:
+          - name: DB_DRIVER
+            value: postgres
+          - name: DB_SOURCE
+            value: postgresql://root:P@ssword@golang-simple-bank-db-service:5432/simple_bank?sslmode=disable
+          - name: SERVER_ADDRESS
+            value: 0.0.0.0:8080
+          - name: TOKEN_SYMMETRIC_KEY
+            value: "99423432947234234234978234234234"  
+          - name: ACCESS_TOKEN_DURATION
+            value: 15m
