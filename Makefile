@@ -1,6 +1,9 @@
 dbup:
 	docker compose -f docker-compose-local.yml up -d
 
+dbdown:
+	docker compose -f docker-compose-local.yml down
+
 createdb:
 	docker exec -it golang-simple-bank-db createdb --username=root --owner=root simple_bank
 
