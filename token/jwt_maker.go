@@ -12,7 +12,7 @@ const (
 	minSecretKeySize = 32
 )
 
-//json web token maker
+// json web token maker
 type JWTMaker struct {
 	secretKey string
 }
@@ -25,17 +25,18 @@ func NewJWTMaker(secretKey string) (Maker, error) {
 	return &JWTMaker{secretKey}, nil
 }
 
-//create token
-func (maker *JWTMaker) CreateToken(username string, duration time.Duration) (string, error) {
+// create token
+func (maker *JWTMaker) CreateToken(username string, duration time.Duration) (string, *Payload, error) {
 	payload, err := NewPayload(username, duration)
 	if err != nil {
-		return "", err
+		return "", payload, err
 	}
 	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
-	return jwtToken.SignedString([]byte(maker.secretKey))
+	token, err := jwtToken.SignedString([]byte(maker.secretKey))
+	return token, payload, err
 }
 
-//verify token
+// verify token
 func (maker *JWTMaker) VerifyToken(token string) (*Payload, error) {
 	keyfunc := func(token *jwt.Token) (interface{}, error) {
 		_, ok := token.Method.(*jwt.SigningMethodHMAC)
