@@ -45,6 +45,7 @@ func (server *Server) setUpRounter() {
 	router.GET("/ping", pingRes)
 	router.POST("/users", server.createUser)
 	router.POST("/users/login", server.loginUser)
+	router.POST("/users/renew_access", server.renewAccessTokenUser)
 
 	authRouter := router.Group("/").Use(authMiddleware(server.tokenMaker))
 
