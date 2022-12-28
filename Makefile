@@ -58,5 +58,8 @@ proto:
     --go-grpc_out=pb --go-grpc_opt=paths=source_relative \
     proto/*.proto
 
+evans:
+	evans --host localhost --port 9090 -r repl
+
 .PHONY: dbup createdb dropdb migrateup migrateup1 migratedown migratedown1 migratedrop sqlc test server mock kubedbup kubedbdown kubeapiup minikubeup proto
 
