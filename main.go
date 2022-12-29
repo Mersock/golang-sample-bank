@@ -95,8 +95,13 @@ func runGatewayServer(config util.Config, store db.Store) {
 		log.Fatal("cannot create handle server: ", err)
 	}
 
+	//make gRPC server
 	mux := http.NewServeMux()
 	mux.Handle("/", grpcMux)
+
+	//make swagger server
+	fs := http.FileServer(http.Dir("./doc/swagger"))
+	mux.Handle("/swagger/", http.StripPrefix("/swagger/", fs))
 
 	listener, err := net.Listen("tcp", config.HTTPServerAddress)
 	if err != nil {
