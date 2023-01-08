@@ -29,7 +29,7 @@ sqlc:
 	sqlc generate	
 
 test:
-	go test -v -cover ./...
+	./test_script.sh
 
 server:
 	go run main.go
