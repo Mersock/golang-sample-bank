@@ -16,3 +16,7 @@
 
 #extention vscode
 *.vscode
+
+#goland file
+.idea/
+
